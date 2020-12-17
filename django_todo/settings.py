@@ -85,9 +85,16 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': dj_database_url.parse("postgres://qhbvxtcdbopbna:6c9b0edbce25b50a2225275f8bb8973da1dc261240858179a03e1054b53f4626@ec2-18-206-103-49.compute-1.amazonaws.com:5432/dk2n3rk9n966m")
-}
+if "DATABASE_URL" in os.environ:
+    DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
+else:
+    print("Database URL not found. Using SQLite instead")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
